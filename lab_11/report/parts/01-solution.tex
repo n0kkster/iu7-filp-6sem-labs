@@ -1,0 +1,115 @@
+\section{Программа}
+
+\subsection{База знаний}
+\begin{listing}[Исходный код базы знаний]{lst:t1-prog}{Prolog}
+len(List, Length) :- 
+    len_rec(List, 0, Length).
+
+len_rec([], Acc, Acc) :- !.
+len_rec([_|Tail], Acc, Length) :- 
+    NewAcc is Acc + 1,
+    len_rec(Tail, NewAcc, Length).
+
+
+sum(List, Sum) :- 
+    sum_rec(List, 0, Sum).
+
+sum_rec([], Acc, Acc) :- !.
+sum_rec([Head|Tail], Acc, Sum) :- 
+    NewAcc is Acc + Head,
+    sum_rec(Tail, NewAcc, Sum).
+
+
+sum_odd_pos(List, Sum) :- 
+    sum_odd_pos_rec(List, 0, Sum).
+
+sum_odd_pos_rec([], Acc, Acc) :- !.
+sum_odd_pos_rec([_], Acc, Acc) :- !.
+sum_odd_pos_rec([_, Odd | Tail], Acc, Sum) :- 
+    NewAcc is Acc + Odd,
+    sum_odd_pos_rec(Tail, NewAcc, Sum).
+
+
+filter_gt(List, V, Result) :- 
+    filter_gt_rec(List, V, [], Result).
+
+filter_gt_rec([], _, Acc, Acc) :- !.
+filter_gt_rec([Head|Tail], V, Acc, Result) :- 
+    Head > V, !, 
+    filter_gt_rec(Tail, V, [Head|Acc], Result).
+filter_gt_rec([_|Tail], V, Acc, Result) :- 
+    filter_gt_rec(Tail, V, Acc, Result).
+
+
+remove(List, Element, Result) :- 
+    remove_rec(List, Element, [], Result).
+
+remove_rec([], _, Acc, Acc) :- !.
+remove_rec([Element|Tail], Element, Acc, Result) :- !,
+    remove_rec(Tail, Element, Acc, Result).
+remove_rec([Head|Tail], Element, Acc, Result) :- 
+    remove_rec(Tail, Element, [Head|Acc], Result).
+
+
+merge(List1, List2, Result) :- 
+    prepend(List1, List2, Result).
+
+prepend([], AccList, AccList) :- !.
+prepend([Head|Tail], AccList, Result) :- 
+    prepend(Tail, [Head|AccList], Result).
+\end{listing}
+
+\subsection{Вопросы задания}
+
+Для получения длины списка необходимо задать вопрос: 
+существует ли такой Результат при конкретизированном Списке, для которого 
+удовлетворяется отношение \code{len}.
+
+\begin{listing}[Нахождение длины списка]{lst:q1}{Prolog}
+?- len([a, b, c, d], L).
+\end{listing}
+
+Для получения суммы элементов числового списка необходимо задать 
+вопрос: существует ли такой Результат при конкретизированном числовом 
+Списке, для которого удовлетворяется отношение \code{sum}.
+
+\begin{listing}[Нахождение суммы элементов списка]{lst:q2}{Prolog}
+?- sum([1, 2, 3, 4], S).
+\end{listing}
+
+Для получения суммы элементов числового списка, стоящих на 
+нечетных позициях (нумерация с 0), необходимо задать вопрос: 
+существует ли такой Результат при конкретизированном 
+числовом Списке, для которого удовлетворяется 
+отношение \code{sum\_odd\_pos}.
+
+\begin{listing}[Сумма элементов на нечетных позициях]{lst:q3}{Prolog}
+?- sum_odd_pos([10, 20, 30, 40, 50], S).
+\end{listing}
+
+Для формирования списка из элементов числового списка, больших 
+заданного значения, необходимо задать вопрос: существует ли такой 
+результирующий Список при конкретизированных исходном числовом Списке 
+и пороговом Значении, для которых удовлетворяется отношение \code{filter\_gt}.
+
+\begin{listing}[Фильтрация списка по пороговому значению]{lst:q4}{Prolog}
+?- filter_gt([2, 8, 3, 10, 5], 5, Res).
+\end{listing}
+
+Для удаления заданного элемента из списка необходимо задать вопрос: 
+существует ли такой результирующий Список при конкретизированных 
+исходном Списке и удаляемом Элементе, для которых удовлетворяется 
+отношение \code{remove}.
+
+\begin{listing}[Удаление заданного элемента из списка]{lst:q5}{Prolog}
+?- remove([1, 3, 2, 3, 4], 3, Res).
+\end{listing}
+
+Для объединения двух списков в один результирующий необходимо 
+задать вопрос: существует ли такой результирующий Список при 
+конкретизированных первом Списке и втором Списке, для которых 
+удовлетворяется отношение \code{merge}.
+
+\begin{listing}[Объединение двух списков]{lst:q6}{Prolog}
+?- merge([1, 2], [3, 4], Res).
+\end{listing}

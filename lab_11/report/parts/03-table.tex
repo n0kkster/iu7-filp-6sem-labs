@@ -1,0 +1,29 @@
+\section{Порядок работы системы}
+Порядок работы системы указан в таблице~\ref{tbl:trace-list-len}.
+\begin{center}
+    \begin{tabularx}{\textwidth}{|p{2cm}|X|X|X|}
+        \caption{\label{tbl:trace-list-len}Порядок работы системы для запроса \code{len([a, b], Res)}} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endfirsthead
+
+        \multicolumn{4}{l}{{Продолжение таблицы\ \thetable{}}} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endhead
+
+        \hline
+        \endfoot
+        \endlastfoot
+
+        0 & Резольвента непустая: \newline \code{len([a, b], Res).} \newline Прямой ход. & & Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (\code{len\_rec/3}). \\ \hline
+        1 & \code{len([a, b], Res).} \newline Унификация неуспешна. & \code{len([a, b], Res)} = \newline \code{len\_rec([], Len, Len)} \newline Результат: Неуспех (разные функторы). & Переход к следующему предложению в БЗ (со 2-м заголовком \code{len\_rec/3}). \\ \hline
+        2 & \code{len([a, b], Res).} \newline Унификация неуспешна. & \code{len([a, b], Res)} = \newline \code{len\_rec([\_|Rest], Len, Res)} \newline Результат: Неуспех (разные функторы). & Переход к следующему предложению в БЗ (\code{len/2}). \\ \hline
+        3 & \code{len([a, b], Res).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{len\_rec([a, b], 0, Res).} & \code{len([a, b], Res)} = \newline \code{len(List, Res)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{List = [a, b], Res = Res\}} & Выполнение редукции подцели и применение подстановки к новому состоянию резольвенты. \newline Прямой ход. Запуск алгоритма унификации для новой верхней подцели. \\ \hline
+        4 & \code{len\_rec([a, b], 0, Res).} \newline Унификация неуспешна. & \code{len\_rec([a, b], 0, Res)} = \newline \code{len\_rec([], Len, Len)} \newline Результат: Неуспех (список \code{[a, b]} и пустой список \code{[]} не сопоставляются). & Переход к следующему предложению в БЗ (со 2-м заголовком \code{len\_rec/3}). \\ \hline
+        5 & \code{len\_rec([a, b], 0, Res).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{is(NewLen, +(0, 1)),} \newline \code{len\_rec(Rest, NewLen, Res).} & \code{len\_rec([a, b], 0, Res)} = \newline \code{len\_rec([\_|Rest], Len, Res)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{Rest = [b], Len = 0\}} & Выполнение редукции подцели и применение подстановки. Прямой ход. Вычисление встроенного предиката \code{is}. \newline \code{\{NewLen = 1\}}. \\ \hline
+        6 & \code{len\_rec([b], 1, Res).} \newline Унификация неуспешна. & \code{len\_rec([b], 1, Res)} = \newline \code{len\_rec([], Len, Len)} \newline Результат: Неуспех (несопоставимые списки). & Переход к следующему предложению в БЗ (со 2-м заголовком \code{len\_rec/3}). \\ \hline
+        7 & \code{len\_rec([b], 1, Res).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{is(NewLen, +(1, 1)),} \newline \code{len\_rec(Rest, NewLen, Res).} & \code{len\_rec([b], 1, Res)} = \newline \code{len\_rec([\_|Rest], Len, Res)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{Rest = [], Len = 1\}} & Выполнение редукции подцели и применение подстановки. Прямой ход. Вычисление встроенного предиката \code{is}. \newline \code{\{NewLen = 2\}}. \\ \hline
+        8 & \code{len\_rec([], 2, Res).} \newline Успешная унификация (базовый случай). \newline Редукция подцели: \newline \code{!.} & \code{len\_rec([], 2, Res)} = \newline \code{len\_rec([], Len, Len)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{Len = 2, Res = 2\}} & Выполнение редукции подцели и применение подстановки к новому состоянию резольвенты. Прямой ход. Срабатывает предикат отсечения (\code{!}). \\ \hline
+        9 & \code{!.} \newline Предикат отсечения. & \code{!} \newline Результат: Истина. & Резольвента пуста. \newline Знания подобраны: \code{\{Res = 2\}}. \newline Завершение работы. \\ \hline
+
+    \end{tabularx}
+\end{center}

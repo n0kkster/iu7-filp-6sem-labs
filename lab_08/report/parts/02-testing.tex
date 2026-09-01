@@ -1,0 +1,37 @@
+\section{Тестирование}
+Вопросы к системе представлены в листингах~\ref{lst:test1}--\ref{lst:test5}.
+
+\begin{listing}[Поиск всего имущества Смирнова и его стоимости]{lst:test1}{Prolog}
+?- asset(smirnov, Type, Model, Price, _).
+
+Type = auto, Model = mercedes, Price = 5000000 ;
+Type = structure, Model = cottage, Price = 15000000 ;
+Type = land, Model = garden, Price = 3000000 ;
+Type = vessel, Model = yacht, Price = 12000000.
+\end{listing}
+
+\begin{listing}[Поиск всего имущества Поповой]{lst:test3}{Prolog}
+?- asset(popova, _, Name, _, _).
+
+Name = penthouse ;
+Name = mini_cooper.
+\end{listing}
+
+\begin{listing}[Вычисление суммарной стоимости всего имущества Смирнова]{lst:test2}{Prolog}
+?- total_price(smirnov, Total).
+
+Total = 35000000.
+\end{listing}
+
+\begin{listing}[Поиск объектов собственности стоимостью 8000000]{lst:test4}{Prolog}
+?- asset(Surname, _, Model, 8000000, _).
+
+Surname = kuznetsov,
+Model = tesla.
+\end{listing}
+
+\begin{listing}[Вычисление суммарной стоимости для владельца с неполным набором имущества]{lst:test5}{Prolog}
+?- total_price(sokolov, Total).
+
+Total = 1500000.
+\end{listing}

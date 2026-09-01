@@ -1,0 +1,58 @@
+\section{Тестирование программы}
+Тесты программы представлены в листингах~\ref{lst:test1}--\ref{lst:test6}.
+
+\begin{listing}[Поиск владельца серого Porsche]{lst:test1}{Prolog}
+?- search(LastName, Phone, City, _, _, _, porsche, gray, _, _).
+
+LastName = petrov,
+Phone = '444-44-44',
+City = moscow ;
+LastName = petrov,
+Phone = '444-44-45',
+City = moscow.
+\end{listing}
+
+\begin{listing}[Поиск всех владельцев черных BMW в Казани]{lst:test2}{Prolog}
+?- search(LastName, Phone, kazan, _, _, _, bmw, black, _, _).
+
+LastName = ivanov,
+Phone = '333-33-33',
+LastName = ivanov,
+Phone = '333-33-33'.
+\end{listing}
+
+\begin{listing}[Поиск по конкретному государственному номеру]{lst:test3}{Prolog}
+?- search(LastName, Phone, City, _, _, _, _, _, _, 'B222BB97').
+
+LastName = ivanov,
+Phone = '111-11-11',
+City = moscow ;
+LastName = ivanov,
+Phone = '222-22-22',
+City = moscow ;
+LastName = ivanov,
+Phone = '333-33-33',
+City = kazan.
+\end{listing}
+
+\begin{listing}[Поиск всех автомобилей и контактов Петрова]{lst:test4}{Prolog}
+?- search(petrov, Phone, City, _, _, _, Brand, Color, _, _).
+
+Phone = '444-44-44', City = moscow, Brand = bmw, Color = black ;
+Phone = '444-44-45', City = moscow, Brand = bmw, Color = black ;
+Phone = '444-44-44', City = moscow, Brand = porsche, Color = gray ;
+Phone = '444-44-45', City = moscow, Brand = porsche, Color = gray.
+\end{listing}
+
+\begin{listing}[Поиск владельцев зеленой Audi]{lst:test5}{Prolog}
+?- search(LastName, _, _, _, _, _, audi, green, _, _).
+
+false.
+\end{listing}
+
+\begin{listing}[Поиск владельцев машин с ценой 40000]{lst:test6}{Prolog}
+?- search(LastName, _, City, _, _, _, Brand, _, 40000, _).
+
+LastName = sidorov, City = spb, Brand = audi ;
+LastName = sidorov, City = spb, Brand = audi.
+\end{listing}

@@ -1,0 +1,59 @@
+\section{Порядок работы системы}
+Порядок работы системы указан в таблицах~\ref{tbl:trace-gender}--\ref{tbl:trace-max3}.
+
+\begin{center}
+    \begin{tabularx}{\textwidth}{|p{2cm}|X|X|X|}
+        \caption{\label{tbl:trace-gender}Порядок работы системы для вопроса find\_grandparent} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endfirsthead
+
+        \multicolumn{4}{l}{{Продолжение таблицы\ \thetable{}}} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endhead
+
+        \hline
+        \endfoot
+        \endlastfoot
+
+        0 & Резольвента: \newline \code{find\_grandparent(GP, female, female, kirill).} \newline Резольвента непустая. Прямой ход. & & Запуск алгоритма унификации для верхней подцели с 1-ым заголовком правила из БЗ. \\ \hline
+        1 & \code{find\_grandparent(GP, female, female, kirill).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{parent(GP, Parent),} \newline \code{gender(GP, female),} \newline \code{parent(Parent, kirill),} \newline \code{gender(Parent, female).} & \code{find\_grandparent(GP, female, female, kirill)} = \newline \code{find\_grandparent(GP', GPGender, PGender, Child)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{GPGender = female, PGender = female, Child = kirill\}} & Выполнение редукции подцели и применение подстановки. \newline Прямой ход. Запуск унификации для 1-й подцели и 1-го факта \code{parent}. \\ \hline
+        2 & \code{parent(GP, Parent),} \newline \code{gender(GP, female),} \dots \newline Успешная унификация. & \code{parent(GP, Parent)} = \newline \code{parent(ivan, anna)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{GP = ivan, Parent = anna\}} & Прямой ход. Применение подстановки к резольвенте. Переход к проверке пола \code{ivan}. \\ \hline
+        3 & \code{gender(ivan, female),} \newline \code{parent(anna, kirill),} \newline \code{gender(anna, female).} \newline Унификация неуспешна. & \code{gender(ivan, female)} = \newline \code{gender(ivan, male)} \newline Результат: Неуспех (разные константы \code{female} и \code{male}). & Откат. Восстанавливается предыдущее состояние резольвенты (Шаг 1). Переход к следующему факту \code{parent}. \\ \hline
+        4 & Восстановленная резольвента: \newline \code{parent(GP, Parent),} \newline \code{gender(GP, female),} \dots \newline Успешная унификация. & \code{parent(GP, Parent)} = \newline \code{parent(ivan, boris)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{GP = ivan, Parent = boris\}} & Прямой ход. Применение подстановки к резольвенте. Переход к проверке пола \code{ivan}. \\ \hline
+        5 & \code{gender(ivan, female),} \newline \code{parent(boris, kirill),} \newline \code{gender(boris, female).} \newline Унификация неуспешна. & \code{gender(ivan, female)} = \newline \code{gender(ivan, male)} \newline Результат: Неуспех (пол не совпал). & Откат. Восстанавливается состояние (Шаг 1). Переход к 3-му факту \code{parent}. \\ \hline
+        6 & Восстановленная резольвента: \newline \code{parent(GP, Parent),} \newline \code{gender(GP, female),} \dots \newline Успешная унификация. & \code{parent(GP, Parent)} = \newline \code{parent(maria, anna)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{GP = maria, Parent = anna\}} & Прямой ход. Применение подстановки. Переход к проверке пола \code{maria}. \\ \hline
+        7 & \code{gender(maria, female),} \newline \code{parent(anna, kirill),} \newline \code{gender(anna, female).} \newline Успешная унификация. & \code{gender(maria, female)} = \newline \code{gender(maria, female)} \newline Результат: Успех. \newline Подстановки нет. & Прямой ход. Удаление доказанной подцели. Запуск унификации для \code{parent(anna, kirill)}. \\ \hline
+        8 & \code{parent(anna, kirill),} \newline \code{gender(anna, female).} \newline Унификация неуспешна с первыми 8-ю фактами \code{parent}. & \code{parent(anna, kirill)} = \newline \code{parent(ivan, anna)} \dots \newline Результат: Неуспех (разные константы). & Продолжение поиска по базе знаний до факта №9. \\ \hline
+        9 & \code{parent(anna, kirill),} \newline \code{gender(anna, female).} \newline Успешная унификация. & \code{parent(anna, kirill)} = \newline \code{parent(anna, kirill)} \newline Результат: Успех. \newline Подстановки нет. & Прямой ход. Удаление доказанной подцели. Переход к проверке пола \code{anna}. \\ \hline
+        10 & \code{gender(anna, female).} \newline Успешная унификация. & \code{gender(anna, female)} = \newline \code{gender(anna, female)} \newline Результат: Успех. & Прямой ход. Удаление доказанной подцели. \\ \hline
+        11 & Резольвента пуста. \newline Вывод: \newline \code{GP = maria} & & Знания подобраны. Если запрошен 1 ответ --- завершение. Если нажато \code{;}, произойдет откат (Шаг 12). \\ \hline
+        12 & \code{gender(anna, female).} \newline Встречен конец БЗ. & & Откат. Восстанавливается резольвента из Шага 8. Проверка оставшихся фактов \code{parent}. \\ \hline
+        13 & \code{parent(anna, kirill),} \dots \newline Встречен конец БЗ. & & Откат. Восстанавливается резольвента из Шага 6. Переход к 4-му факту \code{parent(GP, Parent)}. \\ \hline
+        14 & Восстановленная резольвента: \newline \code{parent(GP, Parent),} \dots \newline Успешная унификация. & \code{parent(GP, Parent)} = \newline \code{parent(maria, boris)} \newline Результат: Успех. \newline Подстановка: \newline \code{\{GP = maria, Parent = boris\}} & Прямой ход. Применение подстановки. Переход к проверке пола \code{maria}. \\ \hline
+        15 & \code{gender(maria, female),} \newline \code{parent(boris, kirill),} \dots \newline Успешная унификация. & \code{gender(maria, female)} = \newline \code{gender(maria, female)} \newline Результат: Успех. & Прямой ход. Удаление подцели. Переход к поиску \code{parent(boris, kirill)}. \\ \hline
+        16 & \code{parent(boris, kirill),} \newline \code{gender(boris, female).} \newline Встречен конец БЗ. & \code{parent(boris, kirill)} = \dots \newline Результат: Неуспех (у Бориса ребенок Светлана, а не Кирилл). & Откат. И так далее, пока вся база не будет проверена. В итоге резольвента опустеет с результатом \code{false} (больше вариантов нет). \\ \hline
+    \end{tabularx}
+\end{center}
+
+\begin{center}
+    \begin{tabularx}{\textwidth}{|p{2cm}|X|X|X|}
+        \caption{\label{tbl:trace-max3}Порядок работы системы для вопроса max3\_cut} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endfirsthead
+
+        \multicolumn{4}{l}{{Продолжение таблицы\ \thetable{}}} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endhead
+
+        \hline
+        \endfoot
+        \endlastfoot
+
+        0 & Резольвента: \newline \code{max3\_cut(3, 2, 3, Result).} \newline Резольвента непустая. Прямой ход. & & Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ (\code{max3\_cut(X, Y, Z, X)}). \\ \hline
+        1 & \code{max3\_cut(3, 2, 3, Result).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{>=(X, Y),} \newline \code{>=(X, Z),} \newline \code{!.} & \code{max3\_cut(3, 2, 3, Result)} = \newline \code{max3\_cut(X, Y, Z, X)} \newline Результат: Унификация успешна. \newline Подстановка: \newline \code{\{X = 3, Y = 2, Z = 3, Result = X\}} & Выполнение редукции подцели и применение подстановки к новому состоянию резольвенты. Прямой ход. \\ \hline
+        2 & \code{>=(3, 2),} \newline \code{>=(3, 3),} \newline \code{!.} \newline Успешная унификация (встроенный предикат). & \code{>=(3, 2)} = Истина. \newline Результат: Унификация успешна. \newline Подстановки нет. & Резольвента непустая. Прямой ход. Удаление первой подцели. \\ \hline
+        3 & \code{>=(3, 3),} \newline \code{!.} \newline Успешная унификация. & \code{>=(3, 3)} = Истина. \newline Результат: Унификация успешна. & Резольвента непустая. Прямой ход. Удаление первой подцели. \\ \hline
+        4 & \code{!.} \newline Предикат отсечения. & \code{!} \newline Результат: Истина. & Резольвента пуста. \newline Знания подобраны: \code{\{Result = 3\}}. \newline Завершение работы. Откат невозможен из-за отсечения. \\ \hline
+
+    \end{tabularx}
+\end{center}

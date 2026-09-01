@@ -1,0 +1,38 @@
+\section{Тестирование}
+Вопросы к системе представлены в листингах~\ref{lst:test1}--\ref{lst:test6}.
+
+\begin{listing}[Факториал 0]{lst:test1}{Prolog}
+?- factorial(0, Res).
+
+Res = 1.
+\end{listing}
+
+\begin{listing}[Факториал 1]{lst:test2}{Prolog}
+?- factorial(1, Res).
+
+Res = 1.
+\end{listing}
+
+\begin{listing}[Факториал 10]{lst:test3}{Prolog}
+?- factorial(10, Res).
+
+Res = 3628800.
+\end{listing}
+
+\begin{listing}[1 число Фибоначчи]{lst:test4}{Prolog}
+?- fibonacci(0, Res).
+
+Res = 0.
+\end{listing}
+
+\begin{listing}[16 число Фибоначчи]{lst:test5}{Prolog}
+?- fibonacci(15, Res).
+
+Res = 610.
+\end{listing}
+
+\begin{listing}[126 число Фибоначчи]{lst:test6}{Prolog}
+?- fibonacci(125, Res).
+
+Res = 59425114757512643212875125.
+\end{listing}

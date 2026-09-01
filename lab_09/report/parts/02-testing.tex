@@ -1,0 +1,74 @@
+\section{Тестирование}
+Вопросы к системе представлены в листингах~\ref{lst:test1}--\ref{lst:test12}.
+
+\begin{listing}[Поиск всех бабушек субъекта]{lst:test1}{Prolog}
+?- find_grandparent(GP, female, _, svetlana).
+
+GP = maria ;
+GP = olga .
+\end{listing}
+
+\begin{listing}[Поиск всех дедушек субъекта]{lst:test2}{Prolog}
+?- find_grandparent(GP, male, _, svetlana).
+
+GP = ivan ;
+GP = petr .
+\end{listing}
+
+\begin{listing}[Поиск всех бабушек и дедушек субъекта]{lst:test3}{Prolog}
+?- find_grandparent(GP, _, _, svetlana).
+
+GP = ivan ;
+GP = maria ;
+GP = petr ;
+GP = olga .
+\end{listing}
+
+\begin{listing}[Поиск бабушки по материнской линии]{lst:test4}{Prolog}
+?- find_grandparent(GP, female, female, svetlana).
+
+GP = olga .
+\end{listing}
+
+\begin{listing}[Поиск бабушки и дедушки по материнской линии]{lst:test5}{Prolog}
+?- find_grandparent(GP, _, female, svetlana).
+
+GP = petr ;
+GP = olga .
+\end{listing}
+
+\begin{listing}[Вычисление максимума из двух чисел с использованием отсечения]{lst:test6}{Prolog}
+?- max2_cut(15, 42, Max).
+
+Max = 42.
+\end{listing}
+
+\begin{listing}[Вычисление максимума из двух чисел без использования отсечения]{lst:test8}{Prolog}
+?- max2(15, 42, Max).
+
+Max = 42.
+\end{listing}
+
+\begin{listing}[Вычисление максимума из двух чисел с использованием отсечения]{lst:test9}{Prolog}
+?- max2_cut(42, 42, Max).
+
+Max = 42.
+\end{listing}
+
+\begin{listing}[Вычисление максимума из трех чисел без использования отсечения]{lst:test10}{Prolog}
+?- max3(7, 24, 13, Max).
+
+Max = 24.
+\end{listing}
+
+\begin{listing}[Вычисление максимума из трех чисел с использованием отсечения]{lst:test11}{Prolog}
+?- max3_cut(24, 7, 13, Max).
+
+Max = 24.
+\end{listing}
+
+\begin{listing}[Вычисление максимума из трех чисел с использованием отсечения]{lst:test12}{Prolog}
+?- max3_cut(12, 12, 12, Max).
+
+Max = 12.
+\end{listing}

@@ -1,0 +1,37 @@
+\section{Порядок работы системы}
+Порядок работы системы указан в таблицах~\ref{tbl:trace-fact}--\ref{tbl:trace-fib}.
+\begin{center}
+    \begin{tabularx}{\textwidth}{|p{2cm}|X|X|X|}
+        \caption{\label{tbl:trace-fact}Порядок работы системы для запроса factorial(2, Res)} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endfirsthead
+        \hline
+        \endfoot
+        \endlastfoot
+
+        0 & Резольвента: \newline \code{factorial(2, Res).} \newline Резольвента непустая. Прямой ход. & & Запуск алгоритма унификации для верхней подцели с 1-ым заголовком из БЗ. \\ \hline
+        1 & \code{factorial(2, Res).} \newline Успешная унификация. \newline Редукция подцели: \newline \code{2 >= 0,} \newline \code{fact\_tail(2, 1, Res).} & \code{factorial(2, Res)} = \newline \code{factorial(N, Result)} \newline Результат: Успех. \newline Подстановка: \code{\{N = 2, Result = Res\}} & Прямой ход. Встроенный предикат \code{2 >= 0} истинен, удаляется. Запуск унификации для \code{fact\_tail(2, 1, Res)}. \\ \hline
+        2 & \code{fact\_tail(2, 1, Res).} \newline Успешная унификация со 2-м правилом. \newline Редукция подцели: \newline \code{2 > 0,} \newline \code{NewAcc is 1 * 2,} \newline \code{N1 is 2 - 1,} \newline \code{fact\_tail(N1, NewAcc, Res).} & \code{fact\_tail(2, 1, Res)} = \newline \code{fact\_tail(N, Acc, Result)} \newline Результат: Успех. \newline Подстановка: \code{\{N = 2, Acc = 1, Result = Res\}} & Прямой ход. Вычисление встроенных предикатов. \code{NewAcc = 2}, \code{N1 = 1}. Переход к рекурсивному вызову. \\ \hline
+        3 & \code{fact\_tail(1, 2, Res).} \newline Успешная унификация со 2-м правилом. \newline Редукция подцели: \newline \code{1 > 0,} \newline \code{NewAcc is 2 * 1,} \newline \code{N1 is 1 - 1,} \newline \code{fact\_tail(N1, NewAcc, Res).} & \code{fact\_tail(1, 2, Res)} = \newline \code{fact\_tail(N, Acc, Result)} \newline Результат: Успех. \newline Подстановка: \code{\{N = 1, Acc = 2, Result = Res\}} & Прямой ход. Вычисление встроенных предикатов. \code{NewAcc = 2}, \code{N1 = 0}. Переход к рекурсивному вызову. \\ \hline
+        4 & \code{fact\_tail(0, 2, Res).} \newline Успешная унификация с 1-м правилом (базовый случай). \newline Редукция подцели: \newline \code{!.} & \code{fact\_tail(0, 2, Res)} = \newline \code{fact\_tail(0, Acc, Acc)} \newline Результат: Успех. \newline Подстановка: \code{\{Acc = 2, Res = 2\}} & Прямой ход. Рекурсия завершена. Срабатывает отсечение (\code{!}), удаляя точки возврата. \\ \hline
+        5 & \code{!.} \newline Предикат отсечения. & \code{!} = Истина. & Резольвента пуста. \newline Знания подобраны: \code{Res = 2}. \newline Завершение работы. \\ \hline
+
+    \end{tabularx}
+\end{center}
+
+\begin{center}
+    \begin{tabularx}{\textwidth}{|p{2cm}|X|X|X|}
+        \caption{\label{tbl:trace-fib}Порядок работы системы для запроса fibonacci(2, Res)} \\ \hline
+        № шага & Состояние резольвенты, и вывод: дальнейшие действия (почему?) & Для каких термов запускается алгоритм унификации: T1=T2 и каков результат (и подстановка) & Дальнейшие действия: прямой ход или откат (почему и к чему приводит?) \\ \hline
+        \endfirsthead
+        \hline
+        \endfoot
+        \endlastfoot
+        0 & Резольвента: \newline \code{fibonacci(2, Res).} \newline Прямой ход. & & Запуск алгоритма унификации с правилом оберткой. \\ \hline
+        1 & \code{fibonacci(2, Res).} \newline Успешная унификация. \newline Редукция: \newline \code{2 >= 0,} \newline \code{fib\_tail(2, 0, 1, Res).} & \code{fibonacci(2, Res)} = \newline \code{fibonacci(N, Result)} \newline Подстановка: \code{\{N = 2, Result = Res\}} & Прямой ход. Удаление \code{2 >= 0}. Запуск унификации для \code{fib\_tail}. \\ \hline
+        2 & \code{fib\_tail(2, 0, 1, Res).} \newline Успешная унификация (рекурсивное правило). \newline Редукция: \newline \code{2 > 0,} \newline \code{NextB is 0 + 1,} \newline \code{N1 is 2 - 1,} \newline \code{fib\_tail(N1, 1, NextB, Res).} & \code{fib\_tail(2, 0, 1, Res)} = \newline \code{fib\_tail(N, A, B, Result)} \newline Подстановка: \code{\{N = 2, A = 0, B = 1, Result = Res\}} & Прямой ход. Арифметика: \code{NextB = 1}, \code{N1 = 1}. \newline Вызов \code{fib\_tail(1, 1, 1, Res)}. \\ \hline
+        3 & \code{fib\_tail(1, 1, 1, Res).} \newline Успешная унификация. \newline Редукция: \newline \code{1 > 0,} \newline \code{NextB is 1 + 1,} \newline \code{N1 is 1 - 1,} \newline \code{fib\_tail(N1, 1, NextB, Res).} & \code{fib\_tail(1, 1, 1, Res)} = \newline \code{fib\_tail(N, A, B, Result)} \newline Подстановка: \code{\{N = 1, A = 1, B = 1, Result = Res\}} & Прямой ход. Арифметика: \code{NextB = 2}, \code{N1 = 0}. \newline Вызов \code{fib\_tail(0, 1, 2, Res)}. \\ \hline
+        4 & \code{fib\_tail(0, 1, 2, Res).} \newline Успешная унификация (базовый случай). \newline Редукция: \newline \code{!.} & \code{fib\_tail(0, 1, 2, Res)} = \newline \code{fib\_tail(0, A, \_, A)} \newline Результат: Успех. \newline Подстановка: \code{\{A = 1, Res = 1\}} & Прямой ход. Рекурсия завершена. Второй аккумулятор (\_) отбрасывается. Срабатывает отсечение. \\ \hline
+        5 & \code{!.} \newline Предикат отсечения. & \code{!} = Истина. & Резольвента пуста. \newline Знания подобраны: \code{Res = 1}. \newline Завершение работы. \\ \hline
+    \end{tabularx}
+\end{center}

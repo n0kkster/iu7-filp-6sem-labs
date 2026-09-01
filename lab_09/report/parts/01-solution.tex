@@ -1,0 +1,124 @@
+\section{Программа <<Предки>>}
+
+\subsection{База знаний}
+Исходный код базы знаний <<Предки>> приведен в листинге~\ref{lst:t1-prog}.
+\begin{listing}[Исходный код базы знаний <<Предки>>]{lst:t1-prog}{Prolog}
+find_grandparent(GP, GPGender, PGender, Child) :- 
+    parent(GP, Parent),
+    gender(GP, GPGender),
+    parent(Parent, Child),
+    gender(Parent, PGender).
+
+parent(ivan, anna).
+parent(ivan, boris).
+parent(maria, anna).
+parent(maria, boris).
+
+parent(petr, dmitry).
+parent(petr, elena).
+parent(olga, dmitry).
+parent(olga, elena).
+
+parent(anna, kirill).
+parent(dmitry, kirill).
+parent(boris, svetlana).
+parent(elena, svetlana).
+
+gender(ivan, male).
+gender(petr, male).
+gender(boris, male).
+gender(dmitry, male).
+gender(kirill, male).
+
+gender(maria, female).
+gender(olga, female).
+gender(anna, female).
+gender(elena, female).
+gender(svetlana, female).
+\end{listing}
+
+Исходный код базы знаний <<Максимум>> приведен в листинге~\ref{lst:t2-prog}.
+\begin{listing}[Исходный код базы знаний <<Максимум>>]{lst:t2-prog}{Prolog}
+max3_cut(X, Y, Z, X) :- X >= Y, X >= Z, !.
+max3_cut(_, Y, Z, Y) :- Y >= Z, !.
+max3_cut(_, _, Z, Z).
+
+max3(X, Y, Z, X) :- X >= Y, X >= Z.
+max3(X, Y, Z, Y) :- Y > X,  Y >= Z.
+max3(X, Y, Z, Z) :- Z > X,  Z > Y.
+
+max2(X, Y, X) :- X >= Y.
+max2_(X, Y, Y) :- X < Y.
+
+max2_cut(X, Y, X) :- X >= Y, !.
+max2_cut(_, Y, Y).
+\end{listing}
+
+\subsection{Вопросы задания}
+
+\subsubsection{База знаний «Предки»}
+
+Для получения имён всех бабушек заданного субъекта необходимо 
+задать вопрос: существует ли такие имена предков, удовлетворяющие 
+отношению \code{find\_grandparent}, при условии, что пол предка 2-го колена
+конкретизирован как женский, имя внука конкретизировано.
+
+\begin{listing}[Поиск всех бабушек]{lst:q1}{Prolog}
+?- find\_grandparent(GP, female, \_, ivan).
+\end{listing}
+
+Для получения имён всех дедушек заданного субъекта необходимо 
+задать вопрос: существует ли такие имена предков, удовлетворяющие 
+отношению \code{find\_grandparent}, при условии, что пол предка 2-го колена
+конкретизирован как мужской, имя внука конкретизировано.
+
+\begin{listing}[Поиск всех дедушек]{lst:q2}{Prolog}
+?- find\_grandparent(GP, male, \_, ivan).
+\end{listing}
+
+Для получения имён всех предков 2-го колена заданного субъекта необходимо 
+задать вопрос: существует ли такие имена предков, удовлетворяющие 
+отношению \code{find\_grandparent}, при условии, что имя внука конкретизировано.
+
+\begin{listing}[Поиск всех предков 2-го колена]{lst:q3}{Prolog}
+?- find\_grandparent(GP, \_, \_, ivan).
+\end{listing}
+
+Для получения имён всех бабушек по материнской линии заданного субъекта необходимо 
+задать вопрос: существует ли такие имена предков, удовлетворяющие 
+отношению \code{find\_grandparent}, при условии, что пол предка 2-го колена
+конкретизирован как женский, пол предка 1-го колена
+конкретизирован как женский, имя внука конкретизировано.
+
+\begin{listing}[Бабушка по материнской линии]{lst:q4}{Prolog}
+?- find\_grandparent(GP, female, female, ivan).
+\end{listing}
+
+Для получения имён всех бабушек по материнской линии заданного субъекта необходимо 
+задать вопрос: существует ли такие имена предков, удовлетворяющие 
+отношению \code{find\_grandparent}, при условии, что пол предка 1-го колена
+конкретизирован как женский, имя внука конкретизировано.
+
+\begin{listing}[Предки по материнской линии]{lst:q5}{Prolog}
+?- find\_grandparent(GP, \_, female, ivan).
+\end{listing}
+
+\subsubsection{Поиск максимума}
+
+Для нахождения максимального из двух чисел 
+необходимо задать вопрос о существовании такой переменной \code{Max}, 
+которая удовлетворяет отношению \code{max2} или \code{max2\_cut} при 
+конкретизированных первом и втором числе.
+
+\begin{listing}[Максимум из двух чисел]{lst:q6}{Prolog}
+?- max2\_cut(10, 20, Max).
+\end{listing}
+
+Для нахождения максимального из трех чисел 
+необходимо задать вопрос о существовании такой переменной \code{Max}, 
+которая удовлетворяет отношению \code{max3} или \code{max3\_cut} при 
+конкретизированных первом, втором и третьем числе.
+
+\begin{listing}[Максимум из трех чисел]{lst:q7}{Prolog}
+?- max3\_cut(5, 12, 7, Max).
+\end{listing}

@@ -1,0 +1,31 @@
+\section{Порядок работы системы}
+Порядок работы системы указан в таблице~\ref{tbl:system-operation}.
+
+\begin{center}
+    \begin{tabularx}{\textwidth}{|X|X|X|}
+        \caption{\label{tbl:system-operation}Порядок работы системы} \\ \hline
+        № шага & Сравниваемые термы; результат; подстановка, если есть & Дальнейшие действия: прямой ход или откат (к чему приводит?) \\ \hline
+        \endfirsthead
+
+        \multicolumn{3}{l}{{Продолжение таблицы\ \thetable{}}} \\ \hline
+        № шага & Сравниваемые термы; результат; подстановка, если есть & Дальнейшие действия: прямой ход или откат (к чему приводит?) \\ \hline
+        \endhead
+
+        \hline
+        \endfoot
+        \endlastfoot
+
+        0 & & Резольвента: \newline \code{asset(smirnov, Type, Model, Price, \_).} \\ \hline
+        1 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{total\_price(Name, TotalPrice).} \newline Результат: Унификация неуспешна (разные функторы). & Переход к следующему предложению в базе знаний. \\ \hline
+        2-3 & \dots & \dots \\ \hline
+        4 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{asset(smirnov, auto, mercedes, 5000000, auto\_info(silver, k777kk77)).} \newline Результат: Унификация успешна. \newline Подстановка: \newline \code{\{Type = auto, Model = mercedes, Price = 5000000\}} & Резольвента пуста. \newline Вывод: \newline \code{Type = auto, Model = mercedes, Price = 5000000} \newline Откат и переход к следующему предложению. \\ \hline
+        5 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{asset(smirnov, structure, cottage, 15000000, struct\_info(residential, 120)).} \newline Результат: Унификация успешна. \newline Подстановка: \newline \code{\{Type = structure, Model = cottage, Price = 15000000\}} & Резольвента пуста. \newline Вывод: \newline \code{Type = structure, Model = cottage, Price = 15000000} \newline Откат и переход к следующему предложению. \\ \hline
+        6 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{asset(smirnov, land, garden, 3000000, land\_info(6)).} \newline Результат: Унификация успешна. \newline Подстановка: \newline \code{\{Type = land, Model = garden, Price = 3000000\}} & Резольвента пуста. \newline Вывод: \newline \code{Type = land, Model = garden, Price = 3000000} \newline Откат и переход к следующему предложению. \\ \hline
+        7 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{asset(smirnov, vessel, yacht, 12000000, vessel\_details(18, luxury)).} \newline Результат: Унификация успешна. \newline Подстановка: \newline \code{\{Type = vessel, Model = yacht, Price = 12000000\}} & Резольвента пуста. \newline Вывод: \newline \code{Type = vessel, Model = yacht, Price = 12000000} \newline Откат и переход к следующему предложению. \\ \hline
+        8 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{asset(kuznetsov, auto, tesla, 8000000, \dots).} \newline Результат: Унификация неуспешна (разные константы \code{smirnov} и \code{kuznetsov}). & Переход к следующему предложению. \\ \hline
+        9-23 & \dots & \dots \\ \hline
+        24 & Сравниваемые термы: \newline \code{asset(smirnov, Type, Model, Price, \_).} \newline \code{contact(smirnov, 89110000001, \dots).} \newline Результат: Унификация неуспешна (разные функторы \code{asset} и \code{contact}). & Переход к следующему предложению. \\ \hline
+        25 & & Конец базы знаний. \newline Откат к предыдущему состоянию. \newline Резольвента пуста. \newline Завершение работы. \\ \hline
+
+    \end{tabularx}
+\end{center}
